@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'selenium-webdriver'
+# frozen_string_literal: true
 
-puts 'Hi'
+require "selenium-webdriver"
+
+puts "Hi"
