@@ -4,4 +4,6 @@
 
 require "selenium-webdriver"
 
-puts "Hi"
+require "bookmeter_exporter"
+
+BookmeterExporter::CLI.start(ARGV)
