@@ -11,7 +11,7 @@ module BookmeterExporter
 
     def crawl
       puts "crawling"
-      puts "email: #{@email}, password: #{@password}"
+      puts "crawling end"
     end
   end
 end
