@@ -11,6 +11,8 @@ module BookmeterExporter
 
     def crawl
       puts "crawling"
+      driver = Selenium::WebDriver.for :chrome
+      driver.get "https://bookmeter.com/login"
       puts "crawling end"
     end
   end
