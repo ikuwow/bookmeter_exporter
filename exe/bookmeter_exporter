@@ -2,8 +2,6 @@
 
 # frozen_string_literal: true
 
-require "selenium-webdriver"
-
 require "bookmeter_exporter"
 
 BookmeterExporter::CLI.start(ARGV)
