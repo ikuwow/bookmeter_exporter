@@ -14,7 +14,8 @@ module BookmeterExporter
     def crawl
       start_webdriver
       login
-      read_books
+      go_read_books
+      fetch_read_books_content
       # More codes goes here
 
       puts "crawling end"
@@ -25,7 +26,7 @@ module BookmeterExporter
     def start_webdriver
       puts "Starting Chrome..."
       @driver = Selenium::WebDriver.for :chrome
-      @wait = Selenium::WebDriver::Wait.new(timeout: 5)
+      @wait = Selenium::WebDriver::Wait.new(timeout: 10)
     end
 
     def login
@@ -38,11 +39,30 @@ module BookmeterExporter
       end
     end
 
-    def read_books
+    def go_read_books
       @driver.find_element(:css, "ul.userdata-nav li").click
       @wait.until do
         %r{/books/read$}.match(@driver.current_url)
-        sleep 5
+        sleep 3
+      end
+    end
+
+    def fetch_read_books_content
+      @driver.find_elements(:css, ".book-list--grid ul.book-list__group").each do |ul|
+        ul.find_elements(:tag_name, "li").each do |li|
+          li.find_element(:css, ".book__thumbnail").click
+          @wait.until do
+            %r{/books/[0-9]+$}.match(@driver.current_url)
+            sleep 3
+          end
+          amazon_url = @driver.find_element(:css, ".sidebar__group .group__image a").attribute("href")
+          read_date = @driver.find_element(:css, ".read-book__date").text
+          review_text = @driver.find_element(:css, ".read-book__content").text
+
+          puts amazon_url, read_date, review_text
+
+          @driver.navigate.back
+        end
       end
     end
   end
