@@ -14,7 +14,8 @@ module BookmeterExporter
     desc "export EMAIL", "Main export task"
     def export(email)
       puts "Start"
-      password = ask("Password for #{email}:")
+      password = ask("Password for #{email}:", echo: false)
+      puts ""
       crawler = BookmeterExporter::Crawler.new(email, password)
       crawler.crawl
       puts "End"
