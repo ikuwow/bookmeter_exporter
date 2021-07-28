@@ -14,6 +14,7 @@ module BookmeterExporter
     def crawl
       start_webdriver
       login
+      read_books
       # More codes goes here
 
       puts "crawling end"
@@ -34,6 +35,14 @@ module BookmeterExporter
       @driver.find_element(:css, "form[action='/login'] button[type=submit]").click
       @wait.until do
         @driver.current_url == URI.join(@bookmeter_root, "/home").to_s
+      end
+    end
+
+    def read_books
+      @driver.find_element(:css, "ul.userdata-nav li").click
+      @wait.until do
+        %r{/books/read$}.match(@driver.current_url)
+        sleep 5
       end
     end
   end
