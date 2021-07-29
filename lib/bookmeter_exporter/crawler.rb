@@ -3,6 +3,8 @@
 require "selenium-webdriver"
 require "uri"
 
+require_relative "books"
+
 module BookmeterExporter
   class Crawler
     def initialize(email, password)
@@ -15,10 +17,9 @@ module BookmeterExporter
       start_webdriver
       login
       go_read_books
-      fetch_read_books_content
-      # More codes goes here
-
+      books = fetch_read_books_content
       puts "crawling end"
+      books
     end
 
     private
@@ -55,6 +56,7 @@ module BookmeterExporter
         end
       end
 
+      books = Books.new
       book_urls.each do |url|
         @driver.get url
         @wait.until do
@@ -68,7 +70,10 @@ module BookmeterExporter
         review_text = @driver.find_element(:css, ".read-book__content").text
 
         puts book_asin, read_date, review_text
+        books << Book.new(book_asin, read_date, review_text)
       end
+
+      books
     end
   end
 end

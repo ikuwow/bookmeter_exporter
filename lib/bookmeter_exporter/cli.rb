@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "thor"
+require "csv"
 require_relative "crawler"
 
 module BookmeterExporter
@@ -17,7 +18,8 @@ module BookmeterExporter
       password = ask("Password for #{email}:", echo: false)
       puts ""
       crawler = BookmeterExporter::Crawler.new(email, password)
-      crawler.crawl
+      books = crawler.crawl
+      p books
       puts "End"
     end
 
