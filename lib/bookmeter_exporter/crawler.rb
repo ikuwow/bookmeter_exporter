@@ -50,25 +50,24 @@ module BookmeterExporter
     def fetch_read_books_content
       book_urls = []
       @driver.find_elements(:css, ".book-list--grid ul.book-list__group").each do |ul|
-        ul.find_elements(:tag_name, "li").each do |li|
+        ul.find_elements(:css, "li .detail__title").each do |li|
           book_urls << li.find_element(:tag_name, "a").attribute("href")
         end
       end
-
-      puts book_urls
 
       book_urls.each do |url|
         @driver.get url
         @wait.until do
           %r{/books/[0-9]+$}.match(@driver.current_url)
-          sleep 3
+          sleep 1
         end
 
-        amazon_url = @driver.find_element(:css, ".sidebar__group .group__image a").attribute("href")
+        book_asin = @driver.find_element(:css, ".sidebar__group .group__image a").attribute("href")
+                            .gsub(/https:\/\/www\.amazon\.co\.jp\/dp\/product\/(.+)\/.*/, '\1')
         read_date = @driver.find_element(:css, ".read-book__date").text
         review_text = @driver.find_element(:css, ".read-book__content").text
 
-        puts amazon_url, read_date, review_text
+        puts book_asin, read_date, review_text
       end
     end
   end
