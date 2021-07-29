@@ -61,7 +61,6 @@ module BookmeterExporter
         @driver.get url
         @wait.until do
           %r{/books/[0-9]+$}.match(@driver.current_url)
-          sleep 1
         end
 
         book_asin = @driver.find_element(:css, ".sidebar__group .group__image a").attribute("href")
@@ -69,7 +68,6 @@ module BookmeterExporter
         read_date = @driver.find_element(:css, ".read-book__date").text
         review_text = @driver.find_element(:css, ".read-book__content").text
 
-        puts book_asin, read_date, review_text
         books << Book.new(book_asin, read_date, review_text)
       end
 
