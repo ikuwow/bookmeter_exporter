@@ -14,5 +14,13 @@ module BookmeterExporter
     def initialize
       @books = []
     end
+
+    def to_csv
+      CSV.generate do |csv|
+        @books.each do |book|
+          csv << [book.asin, book.read_date, book.review]
+        end
+      end
+    end
   end
 end

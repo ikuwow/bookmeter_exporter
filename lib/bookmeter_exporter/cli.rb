@@ -19,7 +19,7 @@ module BookmeterExporter
       puts ""
       crawler = BookmeterExporter::Crawler.new(email, password)
       books = crawler.crawl
-      p books
+      puts books.to_csv
       puts "End"
     end
 
