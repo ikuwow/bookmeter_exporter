@@ -49,29 +49,38 @@ module BookmeterExporter
     end
 
     def fetch_read_books_content
-      book_urls = []
-      @driver.find_elements(:css, ".book-list--grid ul.book-list__group").each do |ul|
-        ul.find_elements(:css, "li .detail__title").each do |li|
-          book_urls << li.find_element(:tag_name, "a").attribute("href")
-        end
-      end
+      book_urls = collect_book_urls
 
       books = Books.new
       book_urls.each do |url|
-        @driver.get url
-        @wait.until do
-          %r{/books/[0-9]+$}.match(@driver.current_url)
-        end
-
-        book_asin = @driver.find_element(:css, ".sidebar__group .group__image a").attribute("href")
-                           .gsub(%r{https://www.amazon.co.jp/dp/product/(.+)/.*}, '\1')
-        read_date = @driver.find_element(:css, ".read-book__date").text
-        review_text = @driver.find_element(:css, ".read-book__content").text
-
-        books << Book.new(book_asin, read_date, review_text)
+        books << fetch_book(url)
       end
 
       books
+    end
+
+    def collect_book_urls
+      urls = []
+      @driver.find_elements(:css, ".book-list--grid ul.book-list__group").each do |ul|
+        ul.find_elements(:css, "li .detail__title").each do |li|
+          urls << li.find_element(:tag_name, "a").attribute("href")
+        end
+      end
+      urls
+    end
+
+    def fetch_book(url)
+      @driver.get url
+      @wait.until do
+        %r{/books/[0-9]+$}.match(@driver.current_url)
+      end
+
+      book_asin = @driver.find_element(:css, ".sidebar__group .group__image a").attribute("href")
+                         .gsub(%r{https://www.amazon.co.jp/dp/product/(.+)/.*}, '\1')
+      read_date = @driver.find_element(:css, ".read-book__date").text
+      review_text = @driver.find_element(:css, ".read-book__content").text
+
+      Book.new(book_asin, read_date, review_text)
     end
   end
 end
