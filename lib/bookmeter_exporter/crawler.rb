@@ -65,7 +65,7 @@ module BookmeterExporter
         end
 
         book_asin = @driver.find_element(:css, ".sidebar__group .group__image a").attribute("href")
-                            .gsub(/https:\/\/www\.amazon\.co\.jp\/dp\/product\/(.+)\/.*/, '\1')
+                           .gsub(%r{https://www.amazon.co.jp/dp/product/(.+)/.*}, '\1')
         read_date = @driver.find_element(:css, ".read-book__date").text
         review_text = @driver.find_element(:css, ".read-book__content").text
 
