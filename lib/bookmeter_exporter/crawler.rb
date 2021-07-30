@@ -44,9 +44,13 @@ module BookmeterExporter
 
     def fetch_books(book_urls)
       books = Books.new
+      fetched_books_count = 0
       book_urls.each do |url|
         books << fetch_book(url)
+        fetched_books_count += 1
+        puts "#{fetched_books_count} books fetched..." if fetched_books_count % 10 == 0
       end
+      puts "All books fetched."
       books
     end
 
@@ -70,6 +74,7 @@ module BookmeterExporter
         end
       end
 
+      puts "Book count: #{urls.count}"
       urls
     end
 
