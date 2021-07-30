@@ -13,14 +13,18 @@ module BookmeterExporter
     end
 
     desc "export EMAIL", "Main export task"
+    option :destination, aliases: :d
     def export(email)
       puts "Start"
       password = ask("Password for #{email}:", echo: false)
       puts ""
+
       crawler = BookmeterExporter::Crawler.new(email, password)
       books = crawler.crawl
-      puts books.to_csv
-      puts "End"
+
+      destination = options[:destination] || "./books.csv"
+      IO.write(destination, books.to_csv)
+      puts "Books are successfully exported as '#{destination}'."
     end
 
     default_task :export
