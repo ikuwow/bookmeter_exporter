@@ -2,6 +2,7 @@
 
 require "selenium-webdriver"
 require "uri"
+require "cgi"
 
 require_relative "books"
 
@@ -10,16 +11,15 @@ module BookmeterExporter
     def initialize(email, password)
       @email = email
       @password = password
-      @bookmeter_root = URI.parse("https://bookmeter.com/")
+      @root_url = URI("https://bookmeter.com/")
+      @user_id = nil
     end
 
     def crawl
       start_webdriver
       login
-      go_read_books
-      books = fetch_read_books_content
-      puts "crawling end"
-      books
+      book_urls = collect_book_urls
+      fetch_books(book_urls)
     end
 
     private
@@ -31,42 +31,57 @@ module BookmeterExporter
     end
 
     def login
-      @driver.get URI.join(@bookmeter_root.to_s, "/login")
+      @driver.get @root_url.merge("/login")
       @driver.find_element(:id, "session_email_address").send_keys @email
       @driver.find_element(:id, "session_password").send_keys @password
       @driver.find_element(:css, "form[action='/login'] button[type=submit]").click
-      @wait.until do
-        @driver.current_url == URI.join(@bookmeter_root.to_s, "/home").to_s
-      end
+      @wait.until { @driver.current_url == @root_url.merge("/home").to_s }
+
+      puts "Login success."
+
+      @user_id = @driver.find_element(:css, ".personal-account__data__link").attribute("href")[%r{/([0-9]+)$}, 1]
     end
 
-    def go_read_books
-      @driver.find_element(:css, "ul.userdata-nav li").click
-      @wait.until do
-        %r{/books/read$}.match(@driver.current_url)
-        sleep 3
-      end
-    end
-
-    def fetch_read_books_content
-      book_urls = collect_book_urls
-
+    def fetch_books(book_urls)
       books = Books.new
+      fetched_books_count = 0
       book_urls.each do |url|
         books << fetch_book(url)
+        fetched_books_count += 1
+        puts "#{fetched_books_count} books fetched..." if (fetched_books_count % 10).zero?
       end
-
+      puts "All books fetched."
       books
     end
 
     def collect_book_urls
+      go_read_books
+
+      last_page_url = @driver.find_element(:css, "ul.bm-pagination").find_element(:link_text, "最後").attribute("href")
+      last_page = CGI.parse(URI.parse(last_page_url).query)["page"].shift.to_i
+
       urls = []
-      @driver.find_elements(:css, ".book-list--grid ul.book-list__group").each do |ul|
-        ul.find_elements(:css, "li .detail__title").each do |li|
-          urls << li.find_element(:tag_name, "a").attribute("href")
+      (1..last_page).each do |page|
+        page_url = @root_url.merge("/users/#{@user_id}/books/read?page=#{page}")
+        @driver.get page_url
+
+        book_list_css_selector = ".book-list--grid ul.book-list__group"
+        @wait.until { @driver.current_url == page_url.to_s }
+        @driver.find_elements(:css, book_list_css_selector).each do |ul|
+          ul.find_elements(:css, "li .detail__title").each do |li|
+            urls << li.find_element(:tag_name, "a").attribute("href")
+          end
         end
       end
+
+      puts "Book count: #{urls.count}"
       urls
+    end
+
+    def go_read_books
+      read_books_url = @root_url.merge("/users/#{@user_id}/books/read")
+      @driver.get read_books_url
+      @wait.until { sleep 3 }
     end
 
     def fetch_book(url)
