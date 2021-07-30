@@ -48,7 +48,7 @@ module BookmeterExporter
       book_urls.each do |url|
         books << fetch_book(url)
         fetched_books_count += 1
-        puts "#{fetched_books_count} books fetched..." if fetched_books_count % 10 == 0
+        puts "#{fetched_books_count} books fetched..." if (fetched_books_count % 10).zero?
       end
       puts "All books fetched."
       books

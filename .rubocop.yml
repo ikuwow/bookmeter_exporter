@@ -2,6 +2,12 @@ AllCops:
   TargetRubyVersion: 2.7
   NewCops: enable
 
+Metrics/AbcSize:
+  Max: 30
+
+Metrics/MethodLength:
+  Max: 20
+
 Style/Documentation:
   Enabled: false
 
