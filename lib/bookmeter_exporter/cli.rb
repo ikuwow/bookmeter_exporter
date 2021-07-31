@@ -3,6 +3,7 @@
 require "thor"
 require "csv"
 require_relative "crawler"
+require_relative "version"
 
 module BookmeterExporter
   class CLI < Thor
@@ -25,6 +26,11 @@ module BookmeterExporter
       destination = options[:destination] || "./books.csv"
       IO.write(destination, books.to_csv)
       puts "Books are successfully exported as '#{destination}'."
+    end
+
+    desc "version", "Display version info"
+    def version
+      puts VERSION
     end
 
     default_task :export
