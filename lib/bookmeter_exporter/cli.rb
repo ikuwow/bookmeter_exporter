@@ -32,7 +32,5 @@ module BookmeterExporter
     def version
       puts VERSION
     end
-
-    default_task :export
   end
 end
