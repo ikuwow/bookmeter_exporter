@@ -1,5 +1,8 @@
 # bookmeter_exporter
 
+![example workflow](https://github.com/ikuwow/bookmeter_exporter/actions/workflows/main.yml/badge.svg)
+[![Gem Version](https://badge.fury.io/rb/bookmeter_exporter.svg)](https://badge.fury.io/rb/bookmeter_exporter)
+
 A command line tool to export read books data from https://bookmeter.com as CSV
 
 [読書メーター](https://bookmeter.com)から読み終わった本をエクスポートするCLIツール
