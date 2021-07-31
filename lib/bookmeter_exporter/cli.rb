@@ -16,7 +16,6 @@ module BookmeterExporter
     desc "export EMAIL", "This command exports all read books of an account as CSV."
     option :destination, aliases: :d, desc: "path where CSV file is saved to"
     def export(email)
-      puts "Start"
       password = ask("Password for #{email}:", echo: false)
       puts ""
 
