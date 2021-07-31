@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "Export user history of bookmeter.com"
   spec.homepage      = "https://ikuwow.github.io/bookmeter_exporter/"
   spec.license       = "MIT"
-  spec.required_ruby_version = ">= 2.7"
+  spec.required_ruby_version = ">= 2.6"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/ikuwow/bookmeter_exporter"
