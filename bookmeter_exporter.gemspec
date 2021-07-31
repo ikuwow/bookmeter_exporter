@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ikuo Degawa"]
   spec.email         = ["degawa@ikuwow.com"]
 
-  spec.summary       = "Export user history of bookmeter.com"
+  spec.summary       = "Export read books of bookmeter.com"
   spec.homepage      = "https://ikuwow.github.io/bookmeter_exporter/"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 2.6"
