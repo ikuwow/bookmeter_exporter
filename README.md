@@ -80,6 +80,10 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/ikuwow
 * More tests
 * More fields in CSV
 
+## Links
+
+* [読書メーターをエクスポートするツールを作ってブクログへ移行した : Query OK.](https://queryok.ikuwow.com/entry/bookmeter-exporter-and-booklog/)
+
 ## License
 
 MIT
